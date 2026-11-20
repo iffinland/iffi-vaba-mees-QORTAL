@@ -192,7 +192,9 @@ function ProjectPublishModal({
             <span>Description</span>
             <RichTextEditor
               value={form.descriptionHtml}
-              onChange={(value) => updateField('descriptionHtml', value)}
+              enhanced
+              disabled={isPublishing}
+              onChange={(value, attachments) => setForm((current) => ({ ...current, descriptionHtml: value, attachments }))}
               placeholder="Describe the project"
             />
           </div>

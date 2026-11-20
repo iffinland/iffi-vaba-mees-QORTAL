@@ -18,7 +18,8 @@ import BlogPage from './pages/BlogPage/BlogPage';
 import BlogDetailPage from './pages/BlogDetailPage/BlogDetailPage';
 import StorybookPage from './pages/StorybookPage/StorybookPage';
 import StoryEntryDetailPage from './pages/StoryEntryDetailPage/StoryEntryDetailPage';
-import MonthlySupportPage from './pages/MonthlySupportPage/MonthlySupportPage';
+import PizzaSupportPage from './pages/PizzaSupportPage/PizzaSupportPage';
+import { SUPPORT_ROUTE } from './services/pizzaSupportService';
 
 function App() {
   return (
@@ -41,7 +42,7 @@ function App() {
           <Route path="/blog/:postId" element={<BlogDetailPage />} />
           <Route path="/storybook" element={<StorybookPage />} />
           <Route path="/storybook/:entryId" element={<StoryEntryDetailPage />} />
-          <Route path="/support" element={<MonthlySupportPage />} />
+          <Route path={SUPPORT_ROUTE} element={<PizzaSupportPage />} />
           {/* Võid lisada ka veateate lehe, kui URL on vale */}
           <Route path="*" element={<h1>404: Page Not Found</h1>} />
         </Routes>

@@ -1,44 +1,8 @@
 import { Link } from 'react-router-dom';
-import { FaDatabase, FaHeart, FaTimes, FaUserPlus } from 'react-icons/fa';
+import { FaDatabase, FaPizzaSlice, FaTimes, FaUserPlus } from 'react-icons/fa';
 import { useAudienceActions } from '../../hooks/useAudienceActions';
-import { SUPPORT_ROUTE } from '../../services/monthlySupportService';
+import { SUPPORT_LABEL, SUPPORT_ROUTE } from '../../services/pizzaSupportService';
 import styles from './AudienceActions.module.css';
-
-const formatDate = (timestamp) => {
-  if (!timestamp) return '';
-  return new Intl.DateTimeFormat('en', {
-    month: 'short',
-    day: 'numeric',
-  }).format(new Date(timestamp));
-};
-
-const getSupportBadge = (supportStatus) => {
-  if (!supportStatus || supportStatus.loading) return '';
-  if (supportStatus.state === 'active') {
-    return `Active until ${formatDate(supportStatus.record?.nextDueAt)}`;
-  }
-  if (supportStatus.state === 'due-soon') {
-    return 'Renewal available soon';
-  }
-  if (supportStatus.state === 'ended') {
-    return 'Support period ended';
-  }
-  return '';
-};
-
-const getSupportButtonText = (supportStatus) => {
-  if (!supportStatus || supportStatus.loading) return 'Monthly Support';
-  if (supportStatus.state === 'active') {
-    return `Active until ${formatDate(supportStatus.record?.nextDueAt)}`;
-  }
-  if (supportStatus.state === 'due-soon') {
-    return 'Renewal available soon';
-  }
-  if (supportStatus.state === 'ended') {
-    return 'Renew support?';
-  }
-  return 'Monthly Support';
-};
 
 function AudienceActions() {
   const {
@@ -51,11 +15,7 @@ function AudienceActions() {
     isSubmittingFollow,
     notice,
     openFollow,
-    supportStatus,
   } = useAudienceActions();
-  const supportBadge = getSupportBadge(supportStatus);
-  const supportButtonText = getSupportButtonText(supportStatus);
-  const hasSupportState = ['active', 'due-soon', 'ended'].includes(supportStatus.state);
 
   return (
     <div className={styles.shell}>
@@ -69,22 +29,12 @@ function AudienceActions() {
           <span>Follow</span>
         </button>
 
-        <Link
-          to={SUPPORT_ROUTE}
-          className={`${styles.actionButton} ${hasSupportState ? styles.supportStateButton : ''} ${styles[supportStatus.state] || ''}`}
-          aria-label={supportButtonText}
-        >
+        <Link to={SUPPORT_ROUTE} className={styles.actionButton}>
           <span className={styles.iconBadge}>
-            <FaHeart />
+            <FaPizzaSlice aria-hidden="true" />
           </span>
-          <span>{supportButtonText}</span>
+          <span>{SUPPORT_LABEL}</span>
         </Link>
-
-        {supportBadge && supportStatus.state !== 'active' && (
-          <span className={`${styles.statusBadge} ${styles[supportStatus.state]}`}>
-            {supportBadge}
-          </span>
-        )}
       </div>
 
       {isFollowOpen && (

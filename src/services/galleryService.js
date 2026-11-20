@@ -1,3 +1,4 @@
+import { publishRichText } from './richTextAttachmentService';
 import {
   createShortId,
   encodeObjectToBase64,
@@ -45,6 +46,24 @@ const getBase64ByteSize = (base64) => {
   const padding = base64.endsWith('==') ? 2 : base64.endsWith('=') ? 1 : 0;
   return Math.floor((base64.length * 3) / 4) - padding;
 };
+
+// Send image bytes directly, avoiding the host's multipart chunk-upload path.
+const readImageBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      const separator = typeof result === 'string' ? result.indexOf(',') : -1;
+      if (separator < 0 || !result.slice(separator + 1)) {
+        reject(new Error('Image file is empty or could not be read.'));
+        return;
+      }
+      resolve(result.slice(separator + 1));
+    };
+    reader.onerror = () => reject(new Error('Image file could not be read. Please select it again.'));
+    reader.onabort = () => reject(new Error('Image file reading was cancelled.'));
+    reader.readAsDataURL(file);
+  });
 
 const renderThumbnailBase64 = async (file) => {
   if (!file.type.startsWith('image/')) {
@@ -190,12 +209,14 @@ const publishImage = async ({ file, index, authorName, title }) => {
   }
 
   const imageId = buildImageIdentifier(index);
+  const data64 = await readImageBase64(file);
   const response = await requestQortal({
     action: 'PUBLISH_QDN_RESOURCE',
     name: authorName,
     service: IMAGE_SERVICE,
     identifier: imageId,
-    file,
+    data64,
+    encoding: 'base64',
     filename: file.name || `${imageId}.jpg`,
     title: title || 'Gallery image',
     description: `Image for ${title || 'gallery'}`.slice(0, 4000),
@@ -340,6 +361,8 @@ export const fetchGalleryByIdentifier = async (identifier) => {
 };
 
 export const publishGallery = async ({ form, authorName, authorAddress }) => {
+  const descriptionHtml = await publishRichText(form.descriptionHtml, form.attachments, authorName);
+
   const now = Date.now();
   const identifier = buildGalleryIdentifier({ title: form.title, authorName });
   const imageRows = form.images.slice(0, 10);
@@ -374,8 +397,8 @@ export const publishGallery = async ({ form, authorName, authorAddress }) => {
     id: identifier,
     identifier,
     title: form.title,
-    descriptionHtml: form.descriptionHtml,
-    descriptionText: toPlainText(form.descriptionHtml),
+    descriptionHtml,
+    descriptionText: toPlainText(descriptionHtml),
     coverResource,
     coverUrl: await resolveResourceUrl(coverResource),
     images,
@@ -390,6 +413,8 @@ export const publishGallery = async ({ form, authorName, authorAddress }) => {
 };
 
 export const updateGallery = async ({ gallery, form, authorName }) => {
+  const descriptionHtml = await publishRichText(form.descriptionHtml, form.attachments, authorName);
+
   let coverResource = gallery.coverResource || null;
   let coverUrl = gallery.coverUrl || '';
 
@@ -438,8 +463,8 @@ export const updateGallery = async ({ gallery, form, authorName }) => {
   const updatedGallery = sanitizeGalleryPayload({
     ...gallery,
     title: form.title,
-    descriptionHtml: form.descriptionHtml,
-    descriptionText: toPlainText(form.descriptionHtml),
+    descriptionHtml,
+    descriptionText: toPlainText(descriptionHtml),
     coverResource,
     coverUrl,
     images,

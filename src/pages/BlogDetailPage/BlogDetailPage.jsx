@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import RichTextContent from '../../components/common/RichTextContent';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FaCommentDots, FaEdit, FaHeart, FaShareAlt } from 'react-icons/fa';
 import BlogPublishModal from '../../components/blog/BlogPublishModal';
@@ -12,7 +13,6 @@ import {
   updateBlogPost,
 } from '../../services/blogService';
 import { fetchBlogLikeCount, publishBlogLike } from '../../services/blogEngagementService';
-import { sanitizeHtml } from '../../utils/htmlSanitizer';
 import { isOwnerName } from '../../utils/siteConfig';
 import { copyTextToClipboard } from '../../utils/videoLinks';
 import styles from './BlogDetailPage.module.css';
@@ -122,7 +122,6 @@ function BlogDetailPage() {
   }, [post]);
 
   const canEditPost = isOwnerName(profile.name);
-  const sanitizedContent = useMemo(() => sanitizeHtml(post?.contentHtml || ''), [post]);
 
   const savePostEdits = async (form) => {
     if (!post || !canEditPost) {
@@ -261,10 +260,8 @@ function BlogDetailPage() {
           </button>
         </div>
 
-        <div
-          className={styles.content}
-          dangerouslySetInnerHTML={{ __html: sanitizedContent || '<p>No content added yet.</p>' }}
-        />
+        <RichTextContent className={styles.content} html={post.contentHtml} authorName={post.authorName}
+          fallback={<p>No content added yet.</p>} />
       </article>
 
       <div ref={commentsRef} className={styles.commentsWrap}>

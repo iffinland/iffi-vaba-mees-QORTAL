@@ -202,7 +202,9 @@ function StoryEntryPublishModal({
             <span>Story</span>
             <RichTextEditor
               value={form.contentHtml}
-              onChange={(value) => updateField('contentHtml', value)}
+              enhanced
+              disabled={isPublishing}
+              onChange={(value, attachments) => setForm((current) => ({ ...current, contentHtml: value, attachments }))}
               placeholder="Write the life story chapter"
             />
           </div>

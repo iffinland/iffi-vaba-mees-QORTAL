@@ -4,12 +4,12 @@ import RichTextEditor from '../common/RichTextEditor';
 import styles from './VideoDescriptionEditModal.module.css';
 
 function VideoDescriptionEditModal({ isOpen, isSaving, onClose, onSave, video }) {
-  const [descriptionHtml, setDescriptionHtml] = useState('');
+  const [draft, setDraft] = useState({ descriptionHtml: '' });
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (isOpen) {
-      setDescriptionHtml(video?.descriptionHtml || '');
+      setDraft({ descriptionHtml: video?.descriptionHtml || '' });
       setError('');
     }
   }, [isOpen, video]);
@@ -21,7 +21,7 @@ function VideoDescriptionEditModal({ isOpen, isSaving, onClose, onSave, video })
     setError('');
 
     try {
-      await onSave({ video, descriptionHtml });
+      await onSave({ video, ...draft });
       onClose();
     } catch (err) {
       setError(err?.message || 'Unable to update description.');
@@ -45,8 +45,10 @@ function VideoDescriptionEditModal({ isOpen, isSaving, onClose, onSave, video })
           <div className={styles.fieldGroup}>
             <span>Description</span>
             <RichTextEditor
-              value={descriptionHtml}
-              onChange={setDescriptionHtml}
+              value={draft.descriptionHtml}
+              enhanced
+              disabled={isSaving}
+              onChange={(descriptionHtml, attachments) => setDraft({ descriptionHtml, attachments })}
               placeholder="Update the video description"
             />
           </div>

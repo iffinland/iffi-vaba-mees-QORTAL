@@ -1,3 +1,4 @@
+import RichTextContent from '../../components/common/RichTextContent';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams, useParams } from 'react-router-dom';
 import {
@@ -236,10 +237,8 @@ function GalleryDetailPage() {
       <header className={styles.header}>
         <div>
           <h1>{gallery.title || 'Untitled gallery'}</h1>
-          <div
-            className={styles.description}
-            dangerouslySetInnerHTML={{ __html: gallery.descriptionHtml || 'No description added yet.' }}
-          />
+          <RichTextContent className={styles.description} html={gallery.descriptionHtml} authorName={gallery.authorName}
+            fallback="No description added yet." />
         </div>
         {canEditGallery && (
           <button type="button" className={styles.editButton} onClick={() => setIsEditOpen(true)}>

@@ -1,3 +1,4 @@
+import { publishRichText } from './richTextAttachmentService';
 import {
   createShortId,
   encodeObjectToBase64,
@@ -415,6 +416,8 @@ export const publishBlogPost = async ({ form, authorName, authorAddress }) => {
     throw new Error('Only the site owner can publish blog posts.');
   }
 
+  const contentHtml = await publishRichText(form.contentHtml, form.attachments, authorName);
+
   const now = Date.now();
   const identifier = buildBlogIdentifier({ title: form.title, authorName });
   const cover = await publishCover({
@@ -430,8 +433,8 @@ export const publishBlogPost = async ({ form, authorName, authorAddress }) => {
       identifier,
       title: form.title,
       excerpt: form.excerpt,
-      contentHtml: form.contentHtml,
-      contentText: toPlainText(form.contentHtml),
+      contentHtml,
+      contentText: toPlainText(contentHtml),
       category: form.category,
       tags: normalizeTags(form.tags),
       publishedDate: form.publishedDate,
@@ -464,6 +467,8 @@ export const updateBlogPost = async ({ post, form, authorName }) => {
     throw new Error('Only the site owner can edit blog posts.');
   }
 
+  const contentHtml = await publishRichText(form.contentHtml, form.attachments, authorName);
+
   let coverResource = post.coverResource || null;
   let coverUrl = post.coverUrl || '';
 
@@ -483,8 +488,8 @@ export const updateBlogPost = async ({ post, form, authorName }) => {
       ...post,
       title: form.title,
       excerpt: form.excerpt,
-      contentHtml: form.contentHtml,
-      contentText: toPlainText(form.contentHtml),
+      contentHtml,
+      contentText: toPlainText(contentHtml),
       category: form.category,
       tags: normalizeTags(form.tags),
       publishedDate: form.publishedDate,

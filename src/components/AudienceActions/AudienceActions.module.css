@@ -47,31 +47,6 @@
   transform: scale(0.95);
 }
 
-.supportStateButton.active {
-  color: #20733b;
-}
-
-.supportStateButton.active .iconBadge {
-  background: rgba(40, 138, 69, 0.12);
-  color: #288a45;
-}
-
-.supportStateButton.due-soon,
-.supportStateButton.ended {
-  color: #5c5547;
-  background: rgba(255, 255, 255, 0.9);
-}
-
-.supportStateButton.due-soon .iconBadge,
-.supportStateButton.ended .iconBadge {
-  background: rgba(255, 224, 130, 0.36);
-  color: #8a5a00;
-}
-
-.supportStateButton.ended span:last-child {
-  color: #5c5547;
-}
-
 .iconBadge {
   width: 24px;
   height: 24px;
@@ -84,26 +59,6 @@
   font-size: 0.78rem;
   flex: 0 0 auto;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
-}
-
-.statusBadge {
-  border-radius: 999px;
-  padding: 0.42rem 0.75rem;
-  background: rgba(255, 255, 255, 0.86);
-  color: #333;
-  font-size: 0.78rem;
-  line-height: 1;
-  font-weight: 900;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
-}
-
-.active {
-  color: #20733b;
-}
-
-.due-soon,
-.ended {
-  color: #8a5a00;
 }
 
 .notice {
@@ -223,9 +178,4 @@
     flex: 1 1 9rem;
   }
 
-  .statusBadge {
-    width: 100%;
-    box-sizing: border-box;
-    text-align: center;
-  }
 }

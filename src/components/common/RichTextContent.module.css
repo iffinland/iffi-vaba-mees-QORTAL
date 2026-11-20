@@ -1,0 +1,93 @@
+.attachment {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  vertical-align: middle;
+  max-width: 100%;
+  margin: 0.25rem 0;
+  padding: 0.4rem;
+  border: 1px solid #d6d6d6;
+  border-radius: 9px;
+  background: #f7f7f7;
+  color: #262626;
+}
+
+.filename, .placeholder, .error {
+  overflow-wrap: anywhere;
+}
+
+.attachment button, .pictureDialog button {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+}
+
+.attachment .imageButton {
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.imageButton img {
+  display: block;
+  max-width: min(180px, 100%);
+  max-height: 130px;
+  object-fit: contain;
+}
+
+.attachment video {
+  display: block;
+  flex-basis: 100%;
+  width: min(260px, 100%);
+  max-width: 260px;
+  max-height: 200px;
+  background: #171717;
+  border-radius: 5px;
+}
+
+.textPreview {
+  flex-basis: 100%;
+  max-height: 18rem;
+  overflow: auto;
+  background: #fff;
+  padding: 0.5rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 0.85rem/1.5 monospace;
+}
+
+.error {
+  color: #a02020;
+}
+
+.pictureDialog {
+  max-width: 96vw;
+  max-height: 96dvh;
+  padding: 0.45rem;
+  background: #191919;
+  border: none;
+  border-radius: 8px;
+}
+
+.pictureDialog::backdrop {
+  background: rgb(0 0 0 / 85%);
+}
+
+.pictureDialog img {
+  display: block;
+  max-width: 92vw;
+  max-height: 86dvh;
+  object-fit: contain;
+}
+
+.pictureDialog button {
+  position: absolute;
+  right: 0.6rem;
+  top: 0.6rem;
+  font-size: 1.25rem;
+}

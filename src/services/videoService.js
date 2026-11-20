@@ -1,3 +1,4 @@
+import { publishRichText } from './richTextAttachmentService';
 import {
   createShortId,
   encodeObjectToBase64,
@@ -408,6 +409,8 @@ const publishVideoThumbnail = async ({ file, identifier, authorName, title }) =>
 };
 
 export const publishVideo = async ({ form, authorName, authorAddress }) => {
+  const descriptionHtml = await publishRichText(form.descriptionHtml, form.attachments, authorName);
+
   const now = Date.now();
   const identifier = buildVideoIdentifier({ title: form.title, authorName });
   let qdnVideo = null;
@@ -427,7 +430,7 @@ export const publishVideo = async ({ form, authorName, authorAddress }) => {
       file: form.videoFile,
       filename: form.videoFile.name || `${identifier}.mp4`,
       title: toQdnTitle(form.title, 'Untitled video'),
-      description: toQdnDescription(toPlainText(form.descriptionHtml), 'Uploaded video'),
+      description: toQdnDescription(toPlainText(descriptionHtml), 'Uploaded video'),
     });
 
     qdnVideo = {
@@ -443,8 +446,8 @@ export const publishVideo = async ({ form, authorName, authorAddress }) => {
     identifier,
     title: form.title,
     performer: form.performer,
-    descriptionHtml: form.descriptionHtml,
-    descriptionText: toPlainText(form.descriptionHtml),
+    descriptionHtml,
+    descriptionText: toPlainText(descriptionHtml),
     playlist: form.playlist,
     publishedDate: form.publishedDate,
     sourceType: form.sourceType,
@@ -473,6 +476,8 @@ export const publishVideo = async ({ form, authorName, authorAddress }) => {
 };
 
 export const updateVideo = async ({ video, form, authorName }) => {
+  const descriptionHtml = await publishRichText(form.descriptionHtml, form.attachments, authorName);
+
   let qdnVideo = video.qdnVideo || null;
   let qdnThumbnail = video.qdnThumbnail || null;
   let thumbnailUrl = video.thumbnailUrl || '';
@@ -499,7 +504,7 @@ export const updateVideo = async ({ video, form, authorName }) => {
       filename: form.videoFile.name || `${video.identifier}.mp4`,
       title: toQdnTitle(form.title || video.title, 'Untitled video'),
       description: toQdnDescription(
-        toPlainText(form.descriptionHtml ?? video.descriptionHtml),
+        toPlainText(descriptionHtml),
         'Uploaded video',
       ),
     });
@@ -516,8 +521,8 @@ export const updateVideo = async ({ video, form, authorName }) => {
     ...video,
     title: form.title,
     performer: form.performer,
-    descriptionHtml: form.descriptionHtml,
-    descriptionText: toPlainText(form.descriptionHtml),
+    descriptionHtml,
+    descriptionText: toPlainText(descriptionHtml),
     playlist: form.playlist,
     publishedDate: form.publishedDate,
     sourceType: nextSourceType,
@@ -542,11 +547,12 @@ export const updateVideo = async ({ video, form, authorName }) => {
   return updatedVideo;
 };
 
-export const updateVideoDescription = async ({ video, descriptionHtml, authorName }) => {
+export const updateVideoDescription = async ({ video, descriptionHtml, attachments, authorName }) => {
+  const content = await publishRichText(descriptionHtml, attachments, authorName);
   const updatedVideo = sanitizeVideoPayload({
     ...video,
-    descriptionHtml,
-    descriptionText: toPlainText(descriptionHtml),
+    descriptionHtml: content,
+    descriptionText: toPlainText(content),
     updated: Date.now(),
   });
 

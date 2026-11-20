@@ -1,6 +1,6 @@
 # Iffi Vaba Mees Project Roadmap
 
-Last updated: 2026-06-10
+Last updated: 2026-11-20
 
 ## Purpose
 
@@ -21,30 +21,33 @@ The website should remain a Qortal/QDN-powered personal website with modal-based
 
 - Framework: Vite + React.
 - Routing: React Router with `HashRouter`.
-- Dynamic publishing already exists for videos, galleries, comments, likes, and guestbook entries.
-- Existing dynamic content is stored through Qortal/QDN `DOCUMENT`, `IMAGE`, `VIDEO`, and `THUMBNAIL` resources.
+- Dynamic publishing covers the blog, projects, the life storybook, videos, galleries, comments, likes, and guestbook entries.
+- Existing dynamic content is stored through Qortal/QDN `DOCUMENT`, `IMAGE`, `VIDEO`, `THUMBNAIL`, and `FILE` resources.
 - Static content still exists in React code and data files, especially home page text, post pages, and projects.
 
 ## QDN Prefix Decisions
 
 - Blog posts: `ivm_blog_`
-- Blog comments: decide during implementation, likely `ivm_bc_`
-- Blog likes: decide during implementation, likely `ivm_bl_`
+- Blog comments: `ivm_bc_`
+- Blog likes: `ivm_bl_`
 - Project entries: `ivm_prj_`
 - Life story entries: `ivm_ls_`
+- Gallery metadata: `iffivabamees_gallery_`
+- Video metadata: `iffivabamees_video_`
+- Inline rich text attachments: `ivm_att_`
 
 ## Phase 1: Blog
 
-Status: Implemented baseline, needs Qortal/QDN runtime testing
+Status: Implemented
 
 Goal: Replace the external Q-Blog navigation link with an internal blog section that works like the existing video and gallery sections.
 
-Planned routes:
+Routes:
 
 - `/blog`
 - `/blog/:postId`
 
-Planned files:
+Implementation files:
 
 - `src/pages/BlogPage/BlogPage.jsx`
 - `src/pages/BlogPage/BlogPage.module.css`
@@ -84,7 +87,7 @@ Blog page features:
 - Sort newest/oldest. Implemented.
 - Owner-only `Publish post` button. Implemented.
 - Detail page with owner-only `Edit post`. Implemented.
-- Reuse the existing rich text editor pattern. Implemented.
+- Publish and edit using the shared rich text editor with inline attachments. The owner verified the update in Qortal.
 - Reuse the existing comments/likes pattern where practical. Implemented.
 - Only trust blog posts published by the owner name `iffi vaba mees`. Implemented through QDN summary owner filtering.
 
@@ -92,7 +95,7 @@ Implementation notes:
 
 - Use `ivm_blog_` as the QDN identifier prefix.
 - Keep the blog implementation close to `videoService.js` and `galleryService.js`.
-- Add basic HTML sanitization before rendering rich text content. Implemented for blog detail content.
+- Sanitize rich text before rendering it in blog posts, project descriptions, story chapters, gallery descriptions, and video descriptions.
 - Replace the current Q-Blog external nav link with an internal `/blog` route. Implemented.
 
 Blog implementation notes:
@@ -105,13 +108,13 @@ Blog implementation notes:
 
 ## Phase 2: Projects
 
-Status: Implemented baseline, needs Qortal/QDN runtime testing
+Status: Implemented
 
 Goal: Keep the current projects overview page, but make the two main choices open richer project sections.
 
 Preferred direction: project portfolio / roadmap board, not a blog clone.
 
-Planned routes:
+Routes:
 
 - `/projects`
 - `/projects/own`
@@ -159,13 +162,13 @@ Open questions:
 
 ## Phase 3: Life Storybook
 
-Status: Implemented baseline, needs Qortal/QDN runtime testing
+Status: Implemented
 
 Goal: Build a separate book-like chronological reading experience for life story entries.
 
 Preferred direction: memoir / chronological book, not a standard blog list.
 
-Possible routes:
+Routes:
 
 - `/storybook`
 - `/storybook/:entryId`
@@ -211,9 +214,15 @@ Open layout ideas:
 
 - Move remaining hardcoded static content into QDN-backed content models over time.
 - Centralize owner-name checks so `iffi vaba mees` is not duplicated across pages.
-- Add shared rich text sanitization before rendering stored HTML.
 - Consider extracting common QDN publishing helpers to reduce duplication across video, gallery, blog, and future content types.
 - Add focused tests for content sanitization and identifier generation.
+
+## Galleries and rich text
+
+- Gallery uploads publish the original image as base64 to QDN `IMAGE`; each image has a separate `THUMBNAIL`. Creating galleries with images and adding images to existing galleries passed the owner’s runtime test.
+- The shared publishing editor adds emoji, text color, highlighting, and inline file references. The comment editor retains the basic toolbar.
+- Inline images and videos use QDN `IMAGE` and `VIDEO`. Text documents and ZIP archives use `FILE`. The published markup stores references so the app can resolve attachments on the reader’s node.
+- Rich text attachment behavior passed the owner’s runtime test.
 
 ## Reusable UI Notes
 
@@ -223,15 +232,16 @@ Open layout ideas:
 - The Let's chat footer action reuses `DirectMessageModal`.
 - Header audience actions are implemented as a standalone `AudienceActions` component above the main navigation.
 - Header audience action state lives in `useAudienceActions`.
-- Current header audience actions: Follow and Monthly Support.
+- Current header audience actions: Follow and By Me a Pizza.
 - Follow adds the configured website names to Qortal's `followedNames` list through `ADD_LIST_ITEMS`.
-- Monthly Support opens `/support` and uses voluntary QORT support payments without locking content.
-- Monthly Support writes supporter-owned `PRODUCT` records with the `ivm_sup_` identifier prefix.
-- Monthly Support status is checked when the website is visited and shown as a small in-page/header badge instead of using Qortal UI global notifications.
+- By Me a Pizza opens `/support`. Presets are 5, 10, and 25 QORT; custom amounts start at 1 QORT. The app resolves the address of its registered publisher and lets the Qortal wallet confirm and send the one-time payment. It publishes no support records to QDN.
+- The owner verified the payment flow in Qortal.
 
 ## Current Verification Baseline
 
-As of 2026-06-10:
+As of 2026-11-20:
 
 - `npm run build` passes.
 - `npm run lint` passes.
+- `node --test tests/gallery-publishing.test.mjs` passes.
+- The [README](README.md) gives the stable download link for the latest approved app ZIP.

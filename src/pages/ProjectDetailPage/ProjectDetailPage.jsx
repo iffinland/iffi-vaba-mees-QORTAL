@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import RichTextContent from '../../components/common/RichTextContent';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FaEdit, FaExternalLinkAlt } from 'react-icons/fa';
 import ProjectPublishModal from '../../components/projects/ProjectPublishModal';
@@ -7,7 +8,6 @@ import {
   getCurrentUserProfile,
   updateProject,
 } from '../../services/projectService';
-import { sanitizeHtml } from '../../utils/htmlSanitizer';
 import { isOwnerName } from '../../utils/siteConfig';
 import styles from './ProjectDetailPage.module.css';
 
@@ -80,10 +80,6 @@ function ProjectDetailPage() {
   }, [projectId]);
 
   const canEditProject = isOwnerName(profile.name);
-  const sanitizedDescription = useMemo(
-    () => sanitizeHtml(project?.descriptionHtml || ''),
-    [project],
-  );
 
   const saveProjectEdits = async (form) => {
     if (!project || !canEditProject) {
@@ -159,10 +155,10 @@ function ProjectDetailPage() {
           )}
         </header>
 
-        {sanitizedDescription && (
+        {project.descriptionHtml && (
           <section className={styles.section}>
             <h2>Description</h2>
-            <div className={styles.richText} dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
+            <RichTextContent className={styles.richText} html={project.descriptionHtml} authorName={project.authorName} />
           </section>
         )}
 

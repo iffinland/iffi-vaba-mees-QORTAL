@@ -1,3 +1,4 @@
+import RichTextContent from '../../components/common/RichTextContent';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
@@ -317,10 +318,7 @@ function VideoDetailPage() {
       <section className={styles.descriptionSection}>
         <h2>Description</h2>
         {video.descriptionHtml ? (
-          <div
-            className={styles.description}
-            dangerouslySetInnerHTML={{ __html: video.descriptionHtml }}
-          />
+          <RichTextContent className={styles.description} html={video.descriptionHtml} authorName={video.authorName} />
         ) : (
           <p className={styles.status}>No description added yet.</p>
         )}

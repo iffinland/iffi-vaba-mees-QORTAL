@@ -1,3 +1,4 @@
+import { publishRichText } from './richTextAttachmentService';
 import {
   createShortId,
   encodeObjectToBase64,
@@ -347,6 +348,8 @@ export const publishLifeStoryEntry = async ({ form, authorName, authorAddress })
     throw new Error('Only the site owner can publish life story entries.');
   }
 
+  const contentHtml = await publishRichText(form.contentHtml, form.attachments, authorName);
+
   const now = Date.now();
   const identifier = buildLifeStoryIdentifier({
     title: form.title,
@@ -366,8 +369,8 @@ export const publishLifeStoryEntry = async ({ form, authorName, authorAddress })
       identifier,
       title: form.title,
       excerpt: form.excerpt,
-      contentHtml: form.contentHtml,
-      contentText: toPlainText(form.contentHtml),
+      contentHtml,
+      contentText: toPlainText(contentHtml),
       storyYear: form.storyYear,
       storyMonth: form.storyMonth,
       storyDay: form.storyDay,
@@ -402,6 +405,8 @@ export const updateLifeStoryEntry = async ({ entry, form, authorName }) => {
     throw new Error('Only the site owner can edit life story entries.');
   }
 
+  const contentHtml = await publishRichText(form.contentHtml, form.attachments, authorName);
+
   let coverResource = entry.coverResource || null;
   let coverUrl = entry.coverUrl || '';
 
@@ -421,8 +426,8 @@ export const updateLifeStoryEntry = async ({ entry, form, authorName }) => {
       ...entry,
       title: form.title,
       excerpt: form.excerpt,
-      contentHtml: form.contentHtml,
-      contentText: toPlainText(form.contentHtml),
+      contentHtml,
+      contentText: toPlainText(contentHtml),
       storyYear: form.storyYear,
       storyMonth: form.storyMonth,
       storyDay: form.storyDay,

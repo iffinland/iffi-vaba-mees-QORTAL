@@ -48,3 +48,44 @@
   content: attr(data-placeholder);
   color: #888;
 }
+
+.enhancedToolbar {
+  flex-wrap: wrap;
+}
+
+.palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.45rem;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.palette button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #c7c7c7;
+  border-radius: 7px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.editor [data-attachment] {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  background: #efefef;
+  color: #222;
+  overflow-wrap: anywhere;
+}
+
+.editor [data-attachment]::before {
+  content: '📎 ';
+}
+
+.attachmentError {
+  margin: 0;
+  padding: 0.45rem 0.85rem;
+  color: #a02020;
+}

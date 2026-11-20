@@ -186,7 +186,9 @@ function BlogPublishModal({
             <span>Content</span>
             <RichTextEditor
               value={form.contentHtml}
-              onChange={(value) => updateField('contentHtml', value)}
+              enhanced
+              disabled={isPublishing}
+              onChange={(value, attachments) => setForm((current) => ({ ...current, contentHtml: value, attachments }))}
               placeholder="Write your blog post"
             />
           </div>

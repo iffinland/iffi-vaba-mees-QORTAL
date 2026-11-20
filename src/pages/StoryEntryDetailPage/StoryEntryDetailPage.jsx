@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import RichTextContent from '../../components/common/RichTextContent';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FaEdit, FaMapMarkerAlt } from 'react-icons/fa';
 import StoryEntryPublishModal from '../../components/storybook/StoryEntryPublishModal';
@@ -7,7 +8,6 @@ import {
   getCurrentUserProfile,
   updateLifeStoryEntry,
 } from '../../services/lifeStoryService';
-import { sanitizeHtml } from '../../utils/htmlSanitizer';
 import { isOwnerName } from '../../utils/siteConfig';
 import styles from './StoryEntryDetailPage.module.css';
 
@@ -57,7 +57,6 @@ function StoryEntryDetailPage() {
   }, [entryId]);
 
   const canEditEntry = isOwnerName(profile.name);
-  const sanitizedContent = useMemo(() => sanitizeHtml(entry?.contentHtml || ''), [entry]);
 
   const saveEntryEdits = async (form) => {
     if (!entry || !canEditEntry) {
@@ -132,10 +131,8 @@ function StoryEntryDetailPage() {
           )}
         </header>
 
-        <div
-          className={styles.content}
-          dangerouslySetInnerHTML={{ __html: sanitizedContent || '<p>No story content added yet.</p>' }}
-        />
+        <RichTextContent className={styles.content} html={entry.contentHtml} authorName={entry.authorName}
+          fallback={<p>No story content added yet.</p>} />
       </article>
 
       <StoryEntryPublishModal

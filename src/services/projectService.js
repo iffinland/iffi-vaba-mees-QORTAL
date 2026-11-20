@@ -1,3 +1,4 @@
+import { publishRichText } from './richTextAttachmentService';
 import {
   createShortId,
   encodeObjectToBase64,
@@ -359,6 +360,8 @@ export const publishProject = async ({ form, authorName, authorAddress }) => {
     throw new Error('Only the site owner can publish projects.');
   }
 
+  const descriptionHtml = await publishRichText(form.descriptionHtml, form.attachments, authorName);
+
   const now = Date.now();
   const identifier = buildProjectIdentifier({ title: form.title, authorName });
   const cover = await publishCover({
@@ -376,8 +379,8 @@ export const publishProject = async ({ form, authorName, authorAddress }) => {
       type: form.type,
       status: form.status,
       summary: form.summary,
-      descriptionHtml: form.descriptionHtml,
-      descriptionText: toPlainText(form.descriptionHtml),
+      descriptionHtml,
+      descriptionText: toPlainText(descriptionHtml),
       role: form.role,
       goals: normalizeLines(form.goals),
       roadmap: normalizeLines(form.roadmap),
@@ -412,6 +415,8 @@ export const updateProject = async ({ project, form, authorName }) => {
     throw new Error('Only the site owner can edit projects.');
   }
 
+  const descriptionHtml = await publishRichText(form.descriptionHtml, form.attachments, authorName);
+
   let coverResource = project.coverResource || null;
   let coverUrl = project.coverUrl || '';
 
@@ -433,8 +438,8 @@ export const updateProject = async ({ project, form, authorName }) => {
       type: form.type,
       status: form.status,
       summary: form.summary,
-      descriptionHtml: form.descriptionHtml,
-      descriptionText: toPlainText(form.descriptionHtml),
+      descriptionHtml,
+      descriptionText: toPlainText(descriptionHtml),
       role: form.role,
       goals: normalizeLines(form.goals),
       roadmap: normalizeLines(form.roadmap),

@@ -4,7 +4,6 @@ import {
   followWebsiteNames,
   getFollowNames,
 } from '../services/audienceActionsService';
-import { useMonthlySupportStatus } from './useMonthlySupportStatus';
 
 function formatNameList(names) {
   return names.join(', ');
@@ -17,7 +16,6 @@ export function useAudienceActions() {
   const [notice, setNotice] = useState('');
   const followNames = useMemo(() => getFollowNames(), []);
   const canFollow = canUseFollowAction();
-  const supportStatus = useMonthlySupportStatus();
 
   const showNotice = (message) => {
     setNotice(message);
@@ -59,6 +57,5 @@ export function useAudienceActions() {
     isSubmittingFollow,
     notice,
     openFollow,
-    supportStatus,
   };
 }

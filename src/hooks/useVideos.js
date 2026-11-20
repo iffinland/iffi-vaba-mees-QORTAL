@@ -147,7 +147,7 @@ export const useVideos = () => {
   );
 
   const saveVideoDescription = useCallback(
-    async ({ video, descriptionHtml }) => {
+    async ({ video, descriptionHtml, attachments }) => {
       if (!profile.name || !profile.address) {
         throw new Error('A Qortal account with a registered name is required.');
       }
@@ -157,6 +157,7 @@ export const useVideos = () => {
         const updatedVideo = await updateVideoDescription({
           video,
           descriptionHtml,
+          attachments,
           authorName: profile.name,
         });
         setVideos((current) =>

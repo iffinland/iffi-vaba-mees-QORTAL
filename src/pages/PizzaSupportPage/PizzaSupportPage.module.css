@@ -1,0 +1,210 @@
+.page {
+  display: grid;
+  gap: 1.2rem;
+  padding-bottom: 3rem;
+  color: #382016;
+}
+
+.hero {
+  padding: clamp(1.3rem, 4vw, 3rem);
+  border: 1px solid #edcfa8;
+  border-radius: 16px;
+  background: #fff1d9;
+}
+
+.hero h1 {
+  margin: 0.32rem 0 0.65rem;
+  color: #792418;
+  font-size: clamp(2.4rem, 7vw, 4.5rem);
+  line-height: 1.05;
+}
+
+.hero p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.eyebrow {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.card {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0.6rem;
+  min-width: 0;
+  padding: 1rem;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: #fffaf1;
+  border: 1px solid #e5c8a6;
+  border-radius: 15px;
+}
+
+button.card, button.price {
+  cursor: pointer;
+}
+
+button.card:not(:disabled):hover {
+  border-color: #ad4730;
+  background: #fff1d9;
+}
+
+button.card:focus-visible, button.price:focus-visible, .custom input:focus-visible {
+  outline: 3px solid #924836;
+  outline-offset: 3px;
+}
+
+button.card:disabled, button.price:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.description {
+  line-height: 1.45;
+}
+
+.price {
+  display: inline-block;
+  box-sizing: border-box;
+  justify-self: start;
+  align-self: end;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: 8px;
+  background: #792418;
+  color: #fff;
+  font: inherit;
+  font-weight: 750;
+}
+
+.custom {
+  grid-template-rows: auto auto auto 1fr auto;
+}
+
+.custom label {
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.custom input {
+  align-self: start;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #c7aa90;
+  border-radius: 7px;
+  color: inherit;
+  background: #fff;
+  font: inherit;
+}
+
+.plate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 108px;
+  border-radius: 9px;
+  background: #f6e3cb;
+}
+
+.pizza {
+  width: 86px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 46% 28%, #b73625 0 6%, transparent 7%),
+    radial-gradient(circle at 67% 44%, #b73625 0 6%, transparent 7%),
+    radial-gradient(circle at 33% 44%, #b73625 0 6%, transparent 7%),
+    radial-gradient(circle at 43% 62%, #b73625 0 6%, transparent 7%),
+    radial-gradient(circle at 60% 71%, #b73625 0 6%, transparent 7%),
+    radial-gradient(circle at 54% 48%, #448046 0 3%, transparent 4%),
+    radial-gradient(circle at 31% 59%, #448046 0 3%, transparent 4%),
+    radial-gradient(circle at 58% 26%, #448046 0 3%, transparent 4%),
+    radial-gradient(circle, #fbd15f 0 54%, #e79232 55% 62%, #ae6127 63% 69%, transparent 70%);
+}
+
+.slice {
+  clip-path: polygon(50% 52%, 15% 0, 87% 0);
+  transform: scale(1.56) translateY(14px);
+}
+
+.half {
+  clip-path: inset(0 0 50% 0);
+  transform: translateY(20px) scale(1.12);
+}
+
+.boxes {
+  position: relative;
+  width: 79px;
+  height: 63px;
+}
+
+.boxes i {
+  position: absolute;
+  inset-inline: 0;
+  height: 30px;
+  border: 2px solid #925b32;
+  border-radius: 4px 7px;
+  background: #d6a269;
+  transform: skewY(-10deg);
+}
+
+.boxes i:nth-child(1) { top: 29px; }
+.boxes i:nth-child(2) { top: 18px; background: #edbc83; }
+.boxes i:nth-child(3) {
+  top: 7px;
+  background: radial-gradient(ellipse at center, #a23a29 0 15%, transparent 17%), #f6cf9c;
+}
+
+.feedback:empty {
+  display: none;
+}
+
+.feedback p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.75rem 0.95rem;
+  background: #fff3db;
+  border-radius: 8px;
+}
+
+.feedback .success { background: #e4f3df; color: #245927; }
+.feedback .error { background: #ffe6df; color: #812819; }
+
+.note {
+  margin: 0;
+  line-height: 1.55;
+  color: #574738;
+}
+
+@media (max-width: 950px) {
+  .menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 420px) {
+  .menu { gap: 0.55rem; }
+  .card { padding: 0.62rem; }
+  .cardTitle { font-size: 1rem; }
+  .description, .price { font-size: 0.875rem; }
+}

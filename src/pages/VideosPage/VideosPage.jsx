@@ -94,8 +94,8 @@ function VideosPage() {
     }
   };
 
-  const handleDescriptionSave = async ({ video, descriptionHtml }) => {
-    await saveVideoDescription({ video, descriptionHtml });
+  const handleDescriptionSave = async ({ video, descriptionHtml, attachments }) => {
+    await saveVideoDescription({ video, descriptionHtml, attachments });
     notify('Video description updated.');
   };
 
